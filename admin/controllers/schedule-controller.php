@@ -2,7 +2,7 @@
 
 class SchedulePressReleasePluginScheduleController extends SchedulePressReleasePluginAdminController{	
 	public static function get_schedules_model(){
-		return self::load_module('Schedules');		
+		return self::load_model('Schedules');		
 	}	
 	
 	public static function execute(){		

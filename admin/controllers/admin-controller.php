@@ -20,7 +20,7 @@ class SchedulePressReleasePluginAdminController{
 		fwrite($f,$text."\r\n");
 		fclose($f);
 	}
-	protected static function load_module($modelname){
+	protected static function load_model($modelname){
 		if(!array_key_exists($modelname,self::$models)){
 			require_once(SCHEDULE_PR_ROOT.'/models/'.strtolower($modelname).'.php');
 			$modelnamefull = 'SchedulePressReleasePluginModels_'.$modelname;

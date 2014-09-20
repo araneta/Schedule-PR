@@ -2,8 +2,15 @@
 require_once "base.php";
 class SchedulePressReleasePluginModels_Settings extends SchedulePressReleasePluginModels_Base{
 	//public $timezone = 'UTC';
-	public $confirmation_message = '<p align="center"><b>Gracias por suscribirte</b></p><p align="center">Recibirásactualizaciones cada vez que tengamos algo nuevo en nuestro sitio.</p>';
-	
+	//form
+	public $txtemail = 'Email';
+	public $txtsubscribe = 'Subscribe';
+	public $confirmation_message = '<p align="center"><b>Thank you for subscribing</b></p><p align="center">Stay tuned.</p>';
+	//email
+	public $email_from = 'Email Alerts';
+	public $email_sender = 'noreply@aldoapp.com';
+	public $email_subject = 'Recent News';
+	public $email_body = 'You are currently subscribed to Email Alerts';
 	public function get_settings(){
 		$settings = get_object_vars($this);		
 		// Read in existing option value from database

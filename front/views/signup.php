@@ -1,19 +1,11 @@
 <div class="contact">				
 	<form method="post">
-		<input type="hidden" value="180.248.9.238" name="ip">
-		<span style="display:none !important">
-			<label for="name">Leave Blank:</label>
-			<input type="text" name="name" id="name">
-			<label for="uri">Do Not Change:</label>
-			<input type="text" value="http://" name="uri" id="uri">
-		</span>
 		<p>
-			<input type="text" size="20" value="" placeholder="correo electrònico" id="s2email" name="email">
+			<input type="text" size="20" value="" placeholder="<?php echo $settings->txtemail;?>" id="email" name="email">
 		</p>
 		<p>
 			<input type="hidden" name="redirect" value="<?php echo home_url();?>" />
-			<input type="submit" value="enviar" name="subscribe" class="pinkbtn">&nbsp;
-			<input type="submit" value="Unsubscribe" name="unsubscribe">
+			<input type="submit" value="<?php echo $settings->txtsubscribe;?>" name="subscribe" class="pinkbtn">&nbsp;			
 		</p>
 	</form>
 </div>

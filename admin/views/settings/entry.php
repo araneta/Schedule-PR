@@ -2,10 +2,37 @@
 	<h2><?php echo __( 'Settings') ?></h2>
 	<?php self::view('status');?>
 	<div>
-		<form method="post"> 						
+		<form method="post"> 			
+			<h2>Translation:</h2>			
+			<h3>Sign Up Form:</h3>			
+			<div>
+				<label>Email</label><br />
+				<input type="text" name="txtemail" value="<?php if($settings)echo $settings->txtemail;?>" />
+			</div>
+			<div>
+				<label>Subscribe</label><br />
+				<input type="text" name="txtsubscribe" value="<?php if($settings)echo $settings->txtsubscribe;?>" />
+			</div>
 			<div>
 				<label>Confimation Message</label><br />
 				<textarea style="width:80%;height:200px;" id="confirmation_message" name="confirmation_message"><?php if($settings)echo $settings->confirmation_message;?></textarea>		
+			</div>
+			<h3>Email:</h3>		
+			<div>
+				<label>From Name</label><br />
+				<input type="text" name="email_from" value="<?php if($settings)echo $settings->email_from;?>" />
+			</div>
+			<div>
+				<label>Sender</label><br />
+				<input type="text" name="email_sender" value="<?php if($settings)echo $settings->email_sender;?>" />
+			</div>
+			<div>
+				<label>Subject</label><br />
+				<input type="text" name="email_subject" value="<?php if($settings)echo $settings->email_subject;?>" />
+			</div>
+			<div>
+				<label>Message</label><br />
+				<textarea style="width:80%;height:200px;" id="email_body" name="email_body"><?php if($settings)echo $settings->email_body;?></textarea>		
 			</div>
 			<div>
 				<label>&nbsp;</label>

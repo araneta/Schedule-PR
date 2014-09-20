@@ -1,21 +1,23 @@
 <?php
 class SchedulePressReleasePluginFrontController{
-	private static $subscribers_model = NULL;
-	private static $schedules_model = NULL;	
-	
-	public static function get_schedules_model(){
-		if(!self::$schedules_model){
-			require_once(SCHEDULE_PR_ROOT.'/models/schedules.php');
-			self::$schedules_model = new SchedulePressReleasePluginModels_Schedules();	
+	private static $models = array();	
+	protected static function load_model($modelname){
+		if(!array_key_exists($modelname,self::$models)){
+			require_once(SCHEDULE_PR_ROOT.'/models/'.strtolower($modelname).'.php');
+			$modelnamefull = 'SchedulePressReleasePluginModels_'.$modelname;
+			self::$models[$modelname] = new $modelnamefull;	
 		}
-		return self::$schedules_model;
+		return self::$models[$modelname];
+	}
+	
+	public static function get_schedules_model(){		
+		return self::load_model('Schedules');
 	}	
 	public static function get_subscribers_model(){
-		if(!self::$subscribers_model){
-			require_once(SCHEDULE_PR_ROOT.'/models/subscribers.php');
-			self::$subscribers_model = new SchedulePressReleasePluginModels_Subscribers();	
-		}
-		return self::$subscribers_model;
+		return self::load_model('Subscribers');
+	}
+	public static function get_settings_model(){
+		return self::load_model('Settings');
 	}
 	public static function execute(){
 		if(isset($_POST['subscribe'])){					
@@ -40,16 +42,17 @@ class SchedulePressReleasePluginFrontController{
 		}
 		wp_register_style('jquery-ui-style', $css);
 		wp_enqueue_style('jquery-ui-style');		
-		
+		$settings = self::get_settings_model()->get_settings();
 		include "views/signup.php";
 	}
 	public static function save_subscriber(){
 		$m = self::get_subscribers_model();
 		if($m->save_subscriber($_POST)){
 			self::send_confirmation_email($_POST['email']);
-			$status = '<p align="center"><b>Gracias por suscribirte</b></p><p align="center">Recibirásactualizaciones cada vez que tengamos algo nuevo en nuestro sitio.</p>';
+			$settings = self::get_settings_model()->get_settings();
+			$status = $settings->confirmation_message;
 			self::set_status('success',$status);	
-			//redirect to list schedule page
+			//redirect to list home page
 			$redirect_url = $_POST['redirect'];
 			self::redirect($redirect_url);		
 		}else{
@@ -59,10 +62,11 @@ class SchedulePressReleasePluginFrontController{
 		//die($status);		
 	}
 	protected static function send_confirmation_email($to){
-		$msg = "Gracias por suscribirte. Recibirásactualizaciones cada vez que tengamos algo nuevo en nuestro sitio.";
-		$subject = "Bienvenido a L’dor V’dor!";
+		$settings = self::get_settings_model()->get_settings();
+		$msg = $settings->email_body;
+		$subject = $settings->email_subject;
 		add_filter('wp_mail_content_type',create_function('', 'return "text/html"; '));
-		$headers = "From: L'dorV'dor Ministry <ldorvdor@ledor-vador.org>" . "\r\n";
+		$headers = "From: ".$settings->email_from." <".$settings->email_sender.">" . "\r\n";
 		wp_mail( $to, $subject, $msg,$headers);
 	}
 	//cron

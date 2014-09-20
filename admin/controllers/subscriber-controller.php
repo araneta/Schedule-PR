@@ -2,7 +2,7 @@
 
 class SchedulePressReleasePluginSubscriberController extends SchedulePressReleasePluginAdminController{	
 	public static function get_subscribers_model(){
-		return self::load_module('Subscribers');		
+		return self::load_model('Subscribers');		
 	}	
 	
 	public static function execute(){

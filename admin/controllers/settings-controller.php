@@ -1,20 +1,20 @@
 <?php
 class SchedulePressReleasePluginSettingsController extends SchedulePressReleasePluginAdminController{		
 	public static function get_settings_model(){
-		return self::load_module('Settings');		
+		return self::load_model('Settings');		
 	}
 	public static function execute(){		
 		if(isset($_POST['save_settings'])){					
 			self::save_settings();
 		}		
 	}
-	//schedules
+	
 	public static function save_settings(){
 		$m = self::get_settings_model();
 		if($m->save_settings($_POST)){
 			$status = 'Saved';
 			self::set_status('success',$status);	
-			//redirect to list schedule page
+			//redirect to settings page
 			$redirect_url = $_POST['redirect'];			
 			self::redirect($redirect_url);		
 		}else{						
