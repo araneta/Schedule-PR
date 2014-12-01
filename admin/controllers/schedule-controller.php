@@ -4,13 +4,18 @@ class SchedulePressReleasePluginScheduleController extends SchedulePressReleaseP
 	public static function get_schedules_model(){
 		return self::load_model('Schedules');		
 	}	
+	public static function get_settings_model(){
+		return self::load_model('Settings');		
+	}	
 	
 	public static function execute(){		
 		if(isset($_POST['save_schedule'])){					
 			self::save_schedule();
 		}else if(isset($_POST['delete_schedule'])){					
 			self::delete_schedule();
-		}		
+		}else if(isset($_POST['send_test'])){					
+			self::send_test();
+		}				
 	}
 	//schedules
 	public static function save_schedule(){
@@ -77,7 +82,28 @@ class SchedulePressReleasePluginScheduleController extends SchedulePressReleaseP
 		$m = self::get_schedules_model('');		
 		self::view("schedule/schedules",array('schedules' => $m->get_schedules()));
 	}
-	
+	public static function send_test(){
+		$schedule = $_POST;
+		if(empty($schedule['email'])){			
+			$status = 'Error: Email is Empty';			
+			self::set_status('error',$status);
+		}else{
+			$settings = self::get_settings_model()->get_settings();
+			
+			$subject = $schedule['subject'];
+			$msg  = $schedule['message_body']; 	
+			$to = $schedule['email'];
+					
+			add_filter('wp_mail_content_type',create_function('', 'return "text/html"; '));
+			$headers = "From: ".$settings->email_from." <".$settings->email_sender.">" . "\r\n";
+			wp_mail( $to, $subject, $msg,$headers);
+			
+			$status = 'Sent';
+			self::set_status('success',$status);				
+			$redirect_url = $_POST['redirect'];			
+			self::redirect($redirect_url);	
+		}			
+	}
 	
 	
 	

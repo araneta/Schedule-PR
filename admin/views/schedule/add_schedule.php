@@ -14,7 +14,13 @@
 			</div>
 			<div>
 				<label>Message</label><br />
-				<textarea style="width:80%;height:200px;" id="message_body" name="message_body"><?php if($schedule)echo $schedule->message_body;?></textarea>		
+				<?php
+				$content = '';
+				if($schedule){
+					$content .= $schedule->message_body;
+				}
+				wp_editor($content,'message_body');
+				?>				
 			</div>
 			<div>
 				<label>Schedule Time, now is <?php echo $now;?></label><br />
@@ -25,9 +31,16 @@
 				<input type="hidden" name="redirect" value="<?php echo $redirect_url;?>" />
 				<input type="submit" name="save_schedule" value="Save" />
 			</div>
+			<br />
+			<div>
+				<input type="submit" name="send_test" value="Send Test" />
+				<label>Email</label>
+				<input type="text" name="email" value="" />
+				
+			</div>
 		</form>
 	</div>	
-	<div style="float:left;width:50%;">
+	<div style="float:left;width:45%;margin-left:20px;">
 		<h2>Recent Posts</h2>
 		<ul class="recentpost">
 		<?php
@@ -75,7 +88,8 @@ jQuery(document).ready(function($){
 		var newlink = '<a href="'+url+'">'+url+'</a>';		
 		var message = title + '<br />' + newlink;
 		$('input[name="subject"]').val(title);		
-		$('#message_body').insertAtCaret(message);
+		//$('#message_body').insertAtCaret(message);
+		tinymce.activeEditor.execCommand('mceInsertContent', false, message);
 	});
 });
 

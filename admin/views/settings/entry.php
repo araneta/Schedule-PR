@@ -6,6 +6,10 @@
 			<h2>Translation:</h2>			
 			<h3>Sign Up Form:</h3>			
 			<div>
+				<label>Name</label><br />
+				<input type="text" name="txtname" value="<?php if($settings)echo $settings->txtname;?>" />
+			</div>
+			<div>
 				<label>Email</label><br />
 				<input type="text" name="txtemail" value="<?php if($settings)echo $settings->txtemail;?>" />
 			</div>
@@ -33,6 +37,10 @@
 			<div>
 				<label>Message</label><br />
 				<textarea style="width:80%;height:200px;" id="email_body" name="email_body"><?php if($settings)echo $settings->email_body;?></textarea>		
+			</div>
+			<div>
+				<label>Notify Email</label><br />
+				<input type="text" name="notify_email" value="<?php if($settings)echo $settings->notify_email;?>" />
 			</div>
 			<div>
 				<label>&nbsp;</label>

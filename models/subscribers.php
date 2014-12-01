@@ -19,6 +19,9 @@ class SchedulePressReleasePluginModels_Subscribers extends SchedulePressReleaseP
 		return  $wpdb->delete($this->table_name,array('email'=>$email));		
 	}
 	public function validate($subscriber){
+		/*if(empty($subscriber['name'])){
+			$this->add_error('name','Name is empty');
+		}*/
 		if(empty($subscriber['email'])){
 			$this->add_error('email','Email is empty');			
 		}else{
@@ -37,7 +40,8 @@ class SchedulePressReleasePluginModels_Subscribers extends SchedulePressReleaseP
 			return TRUE;
 		global $wpdb;
 		$data = array( 
-			'email' => $subscriber['email'], 			
+			'email' => $subscriber['email'],
+			//'name'=> $subscriber['name'] 			
 		) ;
 		//update
 		if(!empty($subscriber['id'])){			

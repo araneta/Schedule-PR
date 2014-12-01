@@ -30,6 +30,7 @@ class SchedulePressReleasePluginInstall{
 		$table_name = $wpdb->prefix . 'schedule_press_release_subscriber';
 		$sql = "CREATE TABLE $table_name (
 			id mediumint(9) NOT NULL AUTO_INCREMENT,		
+			name text NOT NULL,		
 			email text NOT NULL,		
 			UNIQUE KEY id (id)
 		) $charset_collate;";

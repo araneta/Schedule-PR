@@ -19,7 +19,7 @@ class SchedulePressReleasePluginFrontController{
 	public static function get_settings_model(){
 		return self::load_model('Settings');
 	}
-	public static function execute(){
+	public static function execute(){		
 		if(isset($_POST['subscribe'])){					
 			self::save_subscriber();
 		}
@@ -68,6 +68,13 @@ class SchedulePressReleasePluginFrontController{
 		add_filter('wp_mail_content_type',create_function('', 'return "text/html"; '));
 		$headers = "From: ".$settings->email_from." <".$settings->email_sender.">" . "\r\n";
 		wp_mail( $to, $subject, $msg,$headers);
+		//send to 
+		if(isset($settings->notify_email) && !empty($settings->notify_email)){
+			$msg = $to . ' has subscribed to Email Alerts';
+			$subject = 'Someone has subscribed to Email Alerts';			
+			$headers = "From: ".$settings->email_from." <".$settings->email_sender.">" . "\r\n";
+			wp_mail( $settings->notify_email, $subject, $msg,$headers);
+		}
 	}
 	//cron
 	protected static function log($text){
