@@ -42,6 +42,19 @@
 				<label>Notify Email</label><br />
 				<input type="text" name="notify_email" value="<?php if($settings)echo $settings->notify_email;?>" />
 			</div>
+			<h3>reCAPTCHA:</h3>		
+			<div>
+				<input id="enable_recaptcha" type="checkbox" name="enable_recaptcha" value="<?php if($settings)echo $settings->enable_recaptcha;?>" <?php if($settings && $settings->enable_recaptcha==TRUE) echo 'checked="checked"';?> /> <label>Enable reCAPTCHA</label>
+				
+			</div>
+			<div>
+				<label>Site key</label><br />
+				<input type="text" name="site_key" value="<?php if($settings)echo $settings->site_key;?>" />
+			</div>
+			<div>
+				<label>Secret key</label><br />
+				<input type="text" name="secret_key" value="<?php if($settings)echo $settings->secret_key;?>" />
+			</div>
 			<div>
 				<label>&nbsp;</label>
 				<input type="hidden" name="redirect" value="<?php echo $redirect_url;?>" />
@@ -87,6 +100,14 @@ jQuery(document).ready(function($){
 		var newlink = '<a href="'+url+'">'+title+'</a>';
 		$('#message_body').insertAtCaret(newlink);
 	});
+	$('#enable_recaptcha').change(function() {
+        if($(this).is(":checked")) {            
+            $(this).attr("value", 1);
+        }else{
+			$(this).attr("value", 0);
+		}
+        
+    });
 });
 
 //]]>

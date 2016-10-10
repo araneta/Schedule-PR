@@ -20,8 +20,8 @@ class SchedulePressReleasePluginFrontController{
 		return self::load_model('Settings');
 	}
 	public static function execute(){		
-		if(isset($_POST['subscribe'])){					
-			self::save_subscriber();
+		if(isset($_POST['subscribe'])){			
+			self::save_subscriber();				
 		}
 	}
 	protected static function redirect($url){		
@@ -33,7 +33,13 @@ class SchedulePressReleasePluginFrontController{
 		$_SESSION['status_msg'] = $msg;
 	}
 	
-	
+	function frontend_recaptcha_script() {
+		wp_register_script("recaptcha", "https://www.google.com/recaptcha/api.js");
+		wp_enqueue_script("recaptcha");
+		
+		$plugin_url = plugin_dir_url(__FILE__);
+		wp_enqueue_style("no-captcha-recaptcha", $plugin_url ."style.css");
+	}
 	public static function render_signup_form(){
 		wp_enqueue_script('jquery-ui-dialog');
 		$css = 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-darkness/jquery-ui.css';
@@ -43,13 +49,42 @@ class SchedulePressReleasePluginFrontController{
 		wp_register_style('jquery-ui-style', $css);
 		wp_enqueue_style('jquery-ui-style');		
 		$settings = self::get_settings_model()->get_settings();
+		//recaptcha
+		if($settings->enable_recaptcha){
+			wp_register_script("recaptcha", "https://www.google.com/recaptcha/api.js");
+			wp_enqueue_script("recaptcha");
+		}
 		include "views/signup.php";
 	}
+	public static function validate_recaptcha(){
+		if (isset($_POST['g-recaptcha-response'])) {
+			$recaptcha_secret = get_option('captcha_secret_key');
+			$response = wp_remote_get("https://www.google.com/recaptcha/api/siteverify?secret=". $recaptcha_secret ."&response=". $_POST['g-recaptcha-response']);
+			$response = json_decode($response["body"], true);
+			if (true == $response["success"]) {
+				//self::set_status('success',$commentdata);	
+				return TRUE;
+			} else {					
+				self::set_status('error', __("Bots are not allowed to submit comments."));						
+			}
+		} else {
+			self::set_status('error',__("Bots are not allowed to submit comments. If you are not a bot then please enable JavaScript in browser."));				
+		}
+		return FALSE;
+	}
 	public static function save_subscriber(){
+		$settings = self::get_settings_model()->get_settings();
+		$valid = TRUE;
+		if($settings->enable_recaptcha){
+			$valid = validate_recaptcha();					
+		}
+		if(!$valid){
+			return;
+		}
 		$m = self::get_subscribers_model();
 		if($m->save_subscriber($_POST)){
 			self::send_confirmation_email($_POST['email']);
-			$settings = self::get_settings_model()->get_settings();
+			
 			$status = $settings->confirmation_message;
 			self::set_status('success',$status);	
 			//redirect to list home page

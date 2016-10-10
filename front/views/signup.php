@@ -4,6 +4,9 @@
 		<p>
 			<input type="text" size="20" value="" placeholder="<?php echo $settings->txtemail;?>" id="email" name="email">
 		</p>
+		<?php if($settings->enable_recaptcha):?>
+			<div class="g-recaptcha" data-sitekey="<?php echo get_option('site_key'); ?>"></div>
+		<?php endif;?>
 		<p>
 			<input type="hidden" name="redirect" value="<?php echo home_url();?>" />
 			<input type="submit" value="<?php echo $settings->txtsubscribe;?>" name="subscribe" class="redbtn submit">&nbsp;			

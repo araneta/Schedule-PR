@@ -13,12 +13,17 @@ class SchedulePressReleasePluginModels_Settings extends SchedulePressReleasePlug
 	public $email_subject = 'Recent News';
 	public $email_body = 'You are currently subscribed to Email Alerts';
 	public $notify_email = '';
+	//recaptcha
+	public $enable_recaptcha = FALSE;
+	public $site_key = '';
+	public $secret_key = '';
 	
 	public function get_settings(){
 		$settings = get_object_vars($this);		
 		// Read in existing option value from database
 		foreach($settings as $key=>$val){
-			$newval = get_option( $key );						
+			$newval = get_option( $key );
+			//echo $key.' '.$newval;						
 			//if empty then save default
 			if(empty($newval)){						
 				update_option( $key, $val );	
@@ -27,6 +32,7 @@ class SchedulePressReleasePluginModels_Settings extends SchedulePressReleasePlug
 				$this->$key = $newval;
 			}			
 		}
+		
 		return $this;
 	}
 	public function validate($settings){
@@ -42,6 +48,8 @@ class SchedulePressReleasePluginModels_Settings extends SchedulePressReleasePlug
 		if(!$this->validate($newsettings)){
 			return FALSE;
 		}	
+		//var_dump($newsettings);
+		//echo 'asdsda'.$newsettings['enable_recaptcha'];
 		$settings = get_object_vars($this);
 		foreach($settings as $key=>$val){			
 			$newval = isset($newsettings[$key])?$newsettings[$key]:$val;
@@ -49,6 +57,7 @@ class SchedulePressReleasePluginModels_Settings extends SchedulePressReleasePlug
 			update_option($key,$newval);
 			$this->$key = $newval;
 		}			
+		//exit(0);
 		return TRUE;
 	}
 	//convert from utc+0 to user specified timezone
