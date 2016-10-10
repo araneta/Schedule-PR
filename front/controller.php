@@ -58,7 +58,7 @@ class SchedulePressReleasePluginFrontController{
 	}
 	public static function validate_recaptcha(){
 		if (isset($_POST['g-recaptcha-response'])) {
-			$recaptcha_secret = get_option('captcha_secret_key');
+			$recaptcha_secret = get_option('secret_key');
 			$response = wp_remote_get("https://www.google.com/recaptcha/api/siteverify?secret=". $recaptcha_secret ."&response=". $_POST['g-recaptcha-response']);
 			$response = json_decode($response["body"], true);
 			if (true == $response["success"]) {
@@ -76,7 +76,7 @@ class SchedulePressReleasePluginFrontController{
 		$settings = self::get_settings_model()->get_settings();
 		$valid = TRUE;
 		if($settings->enable_recaptcha){
-			$valid = validate_recaptcha();					
+			$valid = self::validate_recaptcha();					
 		}
 		if(!$valid){
 			return;
